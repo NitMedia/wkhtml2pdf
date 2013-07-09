@@ -1,0 +1,21 @@
+{
+    "name": "nitmedia/wkhtml2pdf",
+    "description": "Html 2 Pdf",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nithin Meppurathu",
+            "email": "admin@nitmedia.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Nitmedia\\Wkhtml2pdf": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
