@@ -1,23 +1,53 @@
 wkhtml2pdf
 ==========
-Version 0.1 - Html to PDF Composer Package
+Version 1.0 - Html to PDF Composer Package
 
 #Usage#
 
-  	$wkhtmltopdf = new Wkhtml2pdf([
-			'binpath' => 'lib/',
-			'binfile' => 'wkhtmltopdf-amd64'
-		]);
+	return PDF::html('hello');
 
-		$wkhtmltopdf->setHtml(View::make('hello'));
-		return $wkhtmltopdf->output('I', time() . ".pdf");
+## Quick start
 
+### Required setup
 
+In the `require` key of `composer.json` file add the following
 
+    "nitmedia/wkhtml2pdf": "dev-master"
 
+Run the Composer update comand
 
-    
-    
+    $ composer update
+
+In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider'` to the end of the `$providers` array
+
+    'providers' => array(
+
+        'Illuminate\Foundation\Providers\ArtisanServiceProvider',
+        'Illuminate\Auth\AuthServiceProvider',
+        ...
+        'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider',
+
+    ),
+
+At the end of `config/app.php` add `'Wkhtml2pdf'    => 'Nitmedia\Wkhtml2pdf\Facade\Wkhtml2pdf'` to the `$aliases` array
+
+    'aliases' => array(
+
+        'App'        => 'Illuminate\Support\Facades\App',
+        'Artisan'    => 'Illuminate\Support\Facades\Artisan',
+        ...
+        'PDF'    => 'Nitmedia\Wkhtml2pdf\Facade\Wkhtml2pdf',
+
+    ),
+
+### Configuration
+
+Set the properly values to the `config/Wkhtml2pdf/config.php`. 
+
+### Features
+
+	Add PDF::url('http://google.com'); // Pdf from url
+
 The MIT License (MIT)
 
 Copyright (c) <2013> <Nithin Meppurathu>

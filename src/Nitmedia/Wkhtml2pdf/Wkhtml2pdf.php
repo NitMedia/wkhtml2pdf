@@ -1,6 +1,8 @@
 <?php namespace Nitmedia\Wkhtml2pdf;
 
 use \Exception;
+use Illuminate\View\Environment;
+use Illuminate\Config\Repository;
 
 /**
  * This class was produced by PHP-4-Business.co.uk and is based on the classes from
@@ -19,8 +21,6 @@ use \Exception;
  *              @license None. There are no restrictions on use, however keep copyright intact.
  *                      Modification is allowed, keep track of modifications below in this comment block.
  *
- *
- *
  * Manual for wkhtmltopdf 0.10.0 rc2
  *      http://madalgo.au.dk/~jakobt/wkhtmltoxdoc/wkhtmltopdf_0.10.0_rc2-doc.html
  *
@@ -36,70 +36,6 @@ use \Exception;
  * PHP extension then you must patch QT yourself before compilation (see http://code.google.com/p/wkhtmltopdf/wiki/compilation)
  *
  *
- * Written and tested on Centos 5.4 + PHP 5.2.12
- *
- *
- * Sample Usage
- * ------------
- * 
- *     try {
- *         $wkhtmltopdf = new wkhtmltopdf(array('path' => APPLICATION_PATH . '/../public/uploads/'));
- *         $wkhtmltopdf->setTitle("Title");
- *         $wkhtmltopdf->setHtml("Content");
- *         $wkhtmltopdf->output(wkhtmltopdf::MODE_DOWNLOAD, "file.pdf");
- *     } catch (Exception $e) {
- *         echo $e->getMessage();
- *     }
- * 
- *
- *
- * Alternatively
- * -------------
- *      $headerhtml & $footerhtml will be repeated on each page
- *
- * 
- *     $headerhtml = '<html><head></head><body><table width="100%" border="0"><tr><td width="100%"><img src="' . $_SERVER['HTTP_HOST'] . '/logo.png" /><span style="float:right;font-size:12px">Some Text</span></td></tr></table></body></html>';
- *
- *     $footerhtml = '<html><head></head><body><table width="100%" border="0"><tr><td width="100%" style="text-align:center;font-size:10px;color:blue;">1 Anystreet, Anytown, Anycounty&nbsp;&nbsp;&nbsp;tel: 01234 567890&nbsp;&nbsp;&nbsp;mail@address.co.uk</td></tr></table></body></html>';
- *
- *     $wkhtmloptions .= '--header-spacing 5 --footer-spacing 2 --grayscale --margin-top 15';
- *
- *     $pdf = new wkhtmltopdf(array( 'title'         => 'Title',
- *                                   'html'          => 'Content',
- *                                   'tmppath'       => $_SERVER['DOCUMENT_ROOT'].'tmp',
- *                                   'binpath'       => $_SERVER['DOCUMENT_ROOT'].'bin/',
- *                                   'header_html'   => $headerhtml,
- *                                   'footer_html'   => $footerhtml,
- *                                   'options'       => $wkhtmloptions,
- *                                  ) );
- *     $pdf->output('I', 'document.pdf');
- * 
- *
- *
- *
- * PHP extension
- * -------------
- * To use the PHP extension instantiate the object with the 'php' param.
- * Note: when using the PHP extension you must use the appropriate 'raw' parameters (e.g. 'header.center') and NOT
- * the binary ones (e.g. '--header-center').
- *    also make sure you put the param in the correct array - some settings are "global" and some are "object" (see the manual)
- *
- *     $wkhtmloptions['global'] = array( 'colorMode' => 'grayscale', 'margin.top' => '15mm' );
- *     $wkhtmloptions['object'] = array( 'header.spacing' => '5mm', 'footer.spacing' => '2mm' );
- *
- *     $pdf = new wkhtmltopdf(array( 'title'         => 'Title',
- *                                   'html'          => 'Content',
- *                                   'tmppath'       => $_SERVER['DOCUMENT_ROOT'].'tmp',
- *                                   'header_html'   => $headerhtml,
- *                                   'footer_html'   => $footerhtml,
- *                                   'options'       => $wkhtmloptions,
- *                                 ) ,'php');
- *
- *     $pdf->output('I', 'document.pdf');
- *
- *
- *
- *
  * When using output() the mode param takes one of 4 values:
  *
  * 'D'  (const MODE_DOWNLOAD = 'D')  - Force the client to download PDF file
@@ -109,18 +45,13 @@ use \Exception;
  *
  * But note that the user's browser settings may override what you ask for!
  *
- *
  */
-
-
 
 /**
  * @version 1.01
  */
 class Wkhtml2pdf
 {
-    protected $debug = FALSE;
-
     /**
      * Setters / getters properties
      */
@@ -195,30 +126,47 @@ class Wkhtml2pdf
     const MODE_SAVE = 'F';                                                                                      // PDF file is saved on the server. The path+filename is returned.
 
     /**
+     * Illuminate config repository.
+     *
+     * @var Illuminate\Config\Repository
+     */
+    protected $config;
+
+    /**
+     * Illuminate view environment.
+     *
+     * @var Illuminate\View\Environment
+     */
+    protected $view;
+
+    /**
      * Constructor: initialize command line and reserve temporary file.
-     * @param array $options
+     * @param array $config
      * @param string $method    method to call wkhtmltopdf: 'exec'=binary executable, 'php'=php extension
      * @return bool FALSE on failure
      */
-    public function __construct(array $options = array(), $method='exec')
+    public function __construct(Environment $view, Repository $config, $method='exec')
     {
+        $this->view = $view;
+        $this->config = $config;
+
         switch ($method)
         {
             case  'exec':
-                if (array_key_exists('binpath', $options))
+                if ($this->config->get('Wkhtml2pdf::binpath'))
                 {
-                    if($options['binpath'][0] == '/')
+                    if($this->config->get('Wkhtml2pdf::binpath')[0] == '/')
                     {
-                        $this->setBinPath($options['binpath']);
+                        $this->setBinPath($this->config->get('Wkhtml2pdf::binpath'));
                     }
                     else
                     {
-                        $this->setBinPath( realpath(__DIR__) . '/' . $options['binpath']);
+                        $this->setBinPath( realpath(__DIR__) . '/' . $this->config->get('Wkhtml2pdf::binpath'));
                     }
                 }
 
-                if (array_key_exists('binfile', $options)) {
-                    $this->setBinFile($options['binfile']);
+                if ($this->config->get('Wkhtml2pdf::binfile')) {
+                    $this->setBinFile($this->config->get('Wkhtml2pdf::binfile'));
                 }
 
                 /* Check the binary executable exists */
@@ -236,54 +184,74 @@ class Wkhtml2pdf
         $this->setMethod($method);
 
         // Common to both 'exec' and 'php' method
-
-        if (array_key_exists('html', $options)) {
+        if ($this->config->get('Wkhtml2pdf::html'))
+        {
             $this->setHtml($options['html']);
         }
 
-        if (array_key_exists('orientation', $options)) {
-            $this->setOrientation($options['orientation']);
-        } else {
+        if ($this->config->get('Wkhtml2pdf::orientation'))
+        {
+            $this->setOrientation($this->config->get('Wkhtml2pdf::orientation'));
+        }
+        else
+        {
             $this->setOrientation(self::ORIENTATION_PORTRAIT);
         }
 
-        if (array_key_exists('page_size', $options)) {
-            $this->setPageSize($options['page_size']);
-        } else {
+        if ($this->config->get('Wkhtml2pdf::page_size'))
+        {
+            $this->setPageSize($this->config->get('Wkhtml2pdf::page_size'));
+        }
+        else
+        {
             $this->setPageSize(self::SIZE_A4);
         }
 
-        if (array_key_exists('toc', $options)) {
-            $this->setTOC($options['toc']);
+        if ($this->config->get('Wkhtml2pdf::toc'))
+        {
+            $this->setTOC($this->config->get('Wkhtml2pdf::toc'));
         }
 
-        if (array_key_exists('grayscale', $options)) {
-            $this->setGrayscale($options['grayscale']);
+        if ($this->config->get('Wkhtml2pdf::grayscale'))
+        {
+            $this->setGrayscale($this->config->get('Wkhtml2pdf::grayscale'));
         }
 
-        if (array_key_exists('title', $options)) {
-            $this->setTitle($options['title']);
+        if ($this->config->get('Wkhtml2pdf::title'))
+        {
+            $this->setTitle($this->config->get('Wkhtml2pdf::title'));
         }
 
-        if (array_key_exists('debug', $options)) {
-            $this->debug = $options['debug'];
+        if ($this->config->get('Wkhtml2pdf::debug'))
+        {
+            $this->debug = $this->config->get('Wkhtml2pdf::debug');
         }
 
-        if (array_key_exists('header_html', $options)) {
-            $this->setHeaderHtml($options['header_html']);
+        if ($this->config->get('Wkhtml2pdf::header_html'))
+        {
+            $this->setHeaderHtml($this->config->get('Wkhtml2pdf::header_html'));
         }
 
-        if (array_key_exists('footer_html', $options)) {
-            $this->setFooterHtml($options['footer_html']);
+        if ($this->config->get('Wkhtml2pdf::footer_html'))
+        {
+            $this->setFooterHtml($this->config->get('Wkhtml2pdf::footer_html'));
         }
 
-        if (array_key_exists('tmppath', $options)) {
-            $this->setTmpPath($options['tmppath']);
+        if ($this->config->get('Wkhtml2pdf::tmppath'))
+        {
+            $this->setTmpPath($this->config->get('Wkhtml2pdf::tmppath'));
         }
 
-        if (array_key_exists('options', $options)) {
-            $this->setOptions($options['options']);
+        if ($this->config->get('Wkhtml2pdf::options'))
+        {
+            $this->setOptions($this->config->get('Wkhtml2pdf::options'));
         }
+    }
+
+    public function html($view, $name='file')
+    {
+        $this->setHtml($this->view->make($view));
+        return $this->output('I', $name . ".pdf");
     }
 
     /**
@@ -931,47 +899,41 @@ class Wkhtml2pdf
 
         // error_log((is_array($command)?print_r($command,true):$command));     // for debug
 
-        switch ($this->getMethod()) {
+        switch ($this->getMethod())
+        {
                 case 'exec':
+                    // Deprecated - use _pipeExec
+                    //$content = $this->_exec(str_replace('%input%', $input,$command));
+                    $content = $this->_pipeExec($command);
+                    
+                    if($this->config->get('Wkhtml2pdf::debug'))
+                    {
+                        dd(array(
+                            'input' => $input,
+                            'command' => $command,
+                            'content' => $content
+                        ));
+                    }
 
-                                // Deprecated - use _pipeExec
-                                //$content = $this->_exec(str_replace('%input%', $input,$command));
-                                $content = $this->_pipeExec($command);
-                                
-                                if($this->debug)
-                                {
-                                    echo '<pre>';
-                                    print_r($input);
-                                    print_r($command);
-                                    print_r($content);
-                                    echo '</pre>';
-                                }
+                    if (strpos(strtolower($content['stderr']), 'error'))
+                        throw new Exception("System error <pre>" . $content['stderr'] . "</pre>");
 
-                                if (strpos(strtolower($content['stderr']), 'error'))
-                                                                        throw new Exception("System error <pre>" . $content['stderr'] . "</pre>");
+                    if (strlen($content['stdout']) === 0)
+                        throw new Exception("WKHTMLTOPDF didn't return any data");
 
-                                if (strlen($content['stdout']) === 0)
-                                                                        throw new Exception("WKHTMLTOPDF didn't return any data");
+                    //if ((int)$content['return'] > 1)
+                        //throw new Exception("Shell error, return code: " . (int)$content['return']);
 
-                                //if ((int)$content['return'] > 1)
-                                    //throw new Exception("Shell error, return code: " . (int)$content['return']);
+                    $data = $content['stdout'];
 
-                                $data = $content['stdout'];
-
-                                break;
+                break;
 
                 case 'php':
-                                $command['global']['out'] = $pdffile = $this->_makeFilename();
-                                $command['object']['page'] = $input;
-
-                                // error_log(print_r($command['global'],true)); // for debug
-                                // error_log(print_r($command['object'],true)); // for debug
-
-                                wkhtmltox_convert('pdf', $command['global'], array($command['object']));
-
-                $data = file_get_contents($pdffile);
-                $this->_deleteFile($pdffile);
-
+                    $command['global']['out'] = $pdffile = $this->_makeFilename();
+                    $command['object']['page'] = $input;
+                    wkhtmltox_convert('pdf', $command['global'], array($command['object']));
+                    $data = file_get_contents($pdffile);
+                    $this->_deleteFile($pdffile);
                 break;
         }
 
@@ -1005,17 +967,18 @@ class Wkhtml2pdf
     }
 
     /**
-                 * Advanced execution routine.
-                 *
-                 * @param string $cmd The command to execute.
-                 * @param string $input Any input not in arguments.
-                 * @return array An array of execution data; stdout, stderr and return "error" code.
-                 */
-                private static function _pipeExec($cmd, $input=''){
-                                $pipes = array();
+     * Advanced execution routine.
+     *
+     * @param string $cmd The command to execute.
+     * @param string $input Any input not in arguments.
+     * @return array An array of execution data; stdout, stderr and return "error" code.
+     */
+    private static function _pipeExec($cmd, $input='')
+    {
+        $pipes = array();
         $proc = proc_open($cmd, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, null, array('binary_pipes'=>true));
-                                fwrite($pipes[0], $input);
-                                fclose($pipes[0]);
+        fwrite($pipes[0], $input);
+        fclose($pipes[0]);
 
         // From http://php.net/manual/en/function.proc-open.php#89338
         $read_output = $read_error = false;

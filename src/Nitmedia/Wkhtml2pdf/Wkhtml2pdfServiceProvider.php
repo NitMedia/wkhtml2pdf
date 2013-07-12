@@ -25,7 +25,7 @@ class Wkhtml2pdfServiceProvider extends ServiceProvider {
 	{
 		$this->app['wkhtml2pdf'] = $this->app->share(function($app)
         {
-            return new Wkhtml2pdf;
+            return new Wkhtml2pdf($app['view'], $app['config']);
         });
 	}
 
