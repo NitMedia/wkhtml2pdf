@@ -248,9 +248,15 @@ class Wkhtml2pdf
         }
     }
 
-    public function html($view, $name='file')
+    public function html($view, $data= array(), $name='file')
     {
-        $this->setHtml($this->view->make($view));
+        $this->setHtml($this->view->make($view,$data));
+        return $this->output('I', $name . ".pdf");
+    }
+
+    public function url($url, $name='file')
+    {
+        $this->setHttpUrl($url);
         return $this->output('I', $name . ".pdf");
     }
 
