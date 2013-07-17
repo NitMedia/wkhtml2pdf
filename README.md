@@ -42,7 +42,7 @@ At the end of `config/app.php` add `'Wkhtml2pdf'    => 'Nitmedia\Wkhtml2pdf\Faca
         'App'        => 'Illuminate\Support\Facades\App',
         'Artisan'    => 'Illuminate\Support\Facades\Artisan',
         ...
-        'PDF'    => 'Nitmedia\Wkhtml2pdf\Facade\Wkhtml2pdf',
+        'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf',
 
     ),
 
