@@ -1,10 +1,16 @@
 wkhtml2pdf
 ==========
-Version 1.0 - Html to PDF Composer Package
+Version 1.0 - Laravel 4 - Html to PDF Composer Package
 
 #Usage#
 
-	return PDF::html('hello');
+	return PDF::html('hello'); // hello is naw of blade template
+	
+	return PDF::html('hello',array('name' => 'Nithin')); // pass variables for the view as second option
+	
+	return PDF::html('hello',array('name' => 'Nithin'), 'New File'); // thrid option is for the name of the pdf file thats generated
+
+	PDF::url('http://google.com'); // Pdf from url
 
 ## Quick start
 
@@ -42,11 +48,11 @@ At the end of `config/app.php` add `'Wkhtml2pdf'    => 'Nitmedia\Wkhtml2pdf\Faca
 
 ### Configuration
 
-Set the properly values to the `config/Wkhtml2pdf/config.php`. 
+Set the properly values to the `config/Wkhtml2pdf/config.php`.
 
-### Features
+Please set the driver file accoridng to the current OS
 
-	Add PDF::url('http://google.com'); // Pdf from url
+Supported drivers include: mac osx, linux 32, linux 64
 
 The MIT License (MIT)
 
