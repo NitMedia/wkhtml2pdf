@@ -46,10 +46,21 @@ At the end of `config/app.php` add `'Wkhtml2pdf'    => 'Nitmedia\Wkhtml2pdf\Faca
 
     ),
 
-### Configuration
+## Configuration
 Please set the driver file accoridng to the current OS, Supported drivers include: mac osx, linux 32, linux 64
 
     php artisan config:publish nitmedia/wkhtml2pdf
+    
+### Driver types
+
+	wkhtmltopdf-0.9.9-OS-X.i368
+	wkhtmltopdf-amd64
+	wkhtmltopdf-i386
+    
+## Troubleshooting
+There is a debug flag in config where you can test the output of the drivers.
+
+Some users have noted a strange permissions issue executing the drivers. Try chmod'ing the driver files to solve the issue.
 
 The MIT License (MIT)
 
