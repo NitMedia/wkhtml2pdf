@@ -47,12 +47,9 @@ At the end of `config/app.php` add `'Wkhtml2pdf'    => 'Nitmedia\Wkhtml2pdf\Faca
     ),
 
 ### Configuration
+Please set the driver file accoridng to the current OS, Supported drivers include: mac osx, linux 32, linux 64
 
-Set the properly values to the `config/Wkhtml2pdf/config.php`.
-
-Please set the driver file accoridng to the current OS
-
-Supported drivers include: mac osx, linux 32, linux 64
+    php artisan config:publish nitmedia/wkhtml2pdf
 
 The MIT License (MIT)
 
