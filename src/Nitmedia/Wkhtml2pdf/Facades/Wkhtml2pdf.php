@@ -10,5 +10,4 @@ class Wkhtml2pdf extends Facade {
      * @return string
      */
     protected static function getFacadeAccessor() { return 'wkhtml2pdf'; }
-
 }
