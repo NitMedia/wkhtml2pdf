@@ -58,9 +58,11 @@ Please set the driver file accoridng to the current OS, Supported drivers includ
 	wkhtmltopdf-i386
     
 ## Troubleshooting
-There is a debug flag in config where you can test the output of the drivers.
+	**There is a debug flag in config where you can test the output of the drivers.**
 
-Some users have noted a strange permissions issue executing the drivers. Try chmod'ing the driver files to solve the issue.
+	1. Some users have noted a strange permissions issue executing the drivers. Try chmod'ing the driver files to solve the issue.
+	2. All asset urls must be absolute, relative urls wont work.
+
 
 The MIT License (MIT)
 
