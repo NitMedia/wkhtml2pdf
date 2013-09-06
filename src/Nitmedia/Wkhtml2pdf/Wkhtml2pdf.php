@@ -123,7 +123,9 @@ class Wkhtml2pdf
     const MODE_DOWNLOAD = 'D';                                                                  // Force the client to download PDF file
     const MODE_STRING = 'S';                                                                            // Returns the PDF file as a string
     const MODE_EMBEDDED = 'I';                                                                  // When possible, force the client to embed PDF file
-    const MODE_SAVE = 'F';                                                                                      // PDF file is saved on the server. The path+filename is returned.
+    const MODE_SAVE = 'F';                                                                             // PDF file is saved on the server. The path+filename is returned.
+
+    protected $_outputMode = MODE_EMBEDDED;
 
     /**
      * Illuminate config repository.
@@ -241,6 +243,11 @@ class Wkhtml2pdf
         {
             $this->setTmpPath($this->config->get('Wkhtml2pdf::tmppath'));
         }
+        
+        if ($this->config->get('Wkhtml2pdf::output_mode'))
+        {
+            $this->setOutputMode($this->config->get('Wkhtml2pdf::output_mode'));
+        }
 
         if ($this->config->get('Wkhtml2pdf::options'))
         {
@@ -251,13 +258,13 @@ class Wkhtml2pdf
     public function html($view, $data= array(), $name='file')
     {
         $this->setHtml($this->view->make($view,$data));
-        return $this->output('I', $name . ".pdf");
+        return $this->output($this->getOutputMode(), $name . ".pdf");
     }
 
     public function url($url, $name='file')
     {
         $this->setHttpUrl($url);
-        return $this->output('I', $name . ".pdf");
+        return $this->output($this->getOutputMode(), $name . ".pdf");
     }
 
     /**
@@ -380,6 +387,29 @@ class Wkhtml2pdf
     public function getTmpPath()
     {
         return $this->_tmpfilepath;
+    }
+    
+    /**
+     * Set type of output mode
+     *
+     * @throws Exception
+     * @param string $mode
+     * @return null
+     */
+    public function setOutputMode($mode)
+    {
+        $this->_outputMode = $mode;
+        return;
+    }
+
+    /**
+     * Get type of output mode
+     *
+     * @return string
+     */
+    public function getOutputMode()
+    {
+        return $this->_outputMode;
     }
 
     /**
