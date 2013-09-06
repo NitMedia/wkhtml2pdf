@@ -125,7 +125,7 @@ class Wkhtml2pdf
     const MODE_EMBEDDED = 'I';                                                                  // When possible, force the client to embed PDF file
     const MODE_SAVE = 'F';                                                                             // PDF file is saved on the server. The path+filename is returned.
 
-    protected $_outputMode = MODE_EMBEDDED;
+    protected $_outputMode = 'I';
 
     /**
      * Illuminate config repository.
