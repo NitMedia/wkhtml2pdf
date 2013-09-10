@@ -12,29 +12,17 @@ use Illuminate\Config\Repository;
  *
  * Authorship and copyright of those classes is unclear - they both claim authorship although the code is largely identical!
  * From:
- *              https://github.com/aur1mas/Wkhtmltopdf
- *              @author Aurimas Baubkus aka aur1mas <aur1mas@devnet.lt>
- *              @license Released under "New BSD license"
+ *   https://github.com/aur1mas/Wkhtmltopdf
+ *   @author Aurimas Baubkus aka aur1mas <aur1mas@devnet.lt>
+ *   @license Released under "New BSD license"
  * and
- *              http://code.google.com/p/wkhtmltopdf/wiki/IntegrationWithPhp
- *              @copyright 2010 Christian Sciberras / Covac Software.
- *              @license None. There are no restrictions on use, however keep copyright intact.
- *                      Modification is allowed, keep track of modifications below in this comment block.
- *
- * Manual for wkhtmltopdf 0.10.0 rc2
- *      http://madalgo.au.dk/~jakobt/wkhtmltoxdoc/wkhtmltopdf_0.10.0_rc2-doc.html
+ *   http://code.google.com/p/wkhtmltopdf/wiki/IntegrationWithPhp
+ *   @copyright 2010 Christian Sciberras / Covac Software.
+ *   @license None. There are no restrictions on use, however keep copyright intact.
+ *   Modification is allowed, keep track of modifications below in this comment block.
  *
  * Raw settings
  *      http://www.cs.au.dk/~jakobt/libwkhtmltox_0.10.0_doc/pagesettings.html
- *
- *
- * This class allows to use either the binary program ( http://code.google.com/p/wkhtmltopdf/ )
- * or the PHP extension ( https://github.com/mreiferson/php-wkhtmltox )
- *
- * Note: to use many of the useful parameters (e.g. headers and footers) you need a patched version of QT.
- * This is included within the statically compiled binary, but if you compile the binary yourself or compile the
- * PHP extension then you must patch QT yourself before compilation (see http://code.google.com/p/wkhtmltopdf/wiki/compilation)
- *
  *
  * When using output() the mode param takes one of 4 values:
  *
@@ -120,10 +108,10 @@ class Wkhtml2pdf
     /**
      * PDF get modes
      */
-    const MODE_DOWNLOAD = 'D';                                                                  // Force the client to download PDF file
-    const MODE_STRING = 'S';                                                                            // Returns the PDF file as a string
-    const MODE_EMBEDDED = 'I';                                                                  // When possible, force the client to embed PDF file
-    const MODE_SAVE = 'F';                                                                             // PDF file is saved on the server. The path+filename is returned.
+    const MODE_DOWNLOAD = 'D';              // Force the client to download PDF file
+    const MODE_STRING = 'S';                // Returns the PDF file as a string
+    const MODE_EMBEDDED = 'I';              // When possible, force the client to embed PDF file
+    const MODE_SAVE = 'F';                  // PDF file is saved on the server. The path+filename is returned.
 
     protected $_outputMode = 'I';
 
@@ -144,48 +132,33 @@ class Wkhtml2pdf
     /**
      * Constructor: initialize command line and reserve temporary file.
      * @param array $config
-     * @param string $method    method to call wkhtmltopdf: 'exec'=binary executable, 'php'=php extension
      * @return bool FALSE on failure
      */
-    public function __construct(Environment $view, Repository $config, $method='exec')
+    public function __construct(Environment $view, Repository $config)
     {
         $this->view = $view;
         $this->config = $config;
 
-        switch ($method)
+        if ($this->config->get('Wkhtml2pdf::binpath'))
         {
-            case  'exec':
-                if ($this->config->get('Wkhtml2pdf::binpath'))
-                {
-                    if($this->config->get('Wkhtml2pdf::binpath')[0] == '/')
-                    {
-                        $this->setBinPath($this->config->get('Wkhtml2pdf::binpath'));
-                    }
-                    else
-                    {
-                        $this->setBinPath( realpath(__DIR__) . '/' . $this->config->get('Wkhtml2pdf::binpath'));
-                    }
-                }
-
-                if ($this->config->get('Wkhtml2pdf::binfile')) {
-                    $this->setBinFile($this->config->get('Wkhtml2pdf::binfile'));
-                }
-
-                /* Check the binary executable exists */
-                $this->getBin();
-            break;
-
-            case 'php':
-            break;
-
-            default:
-                throw new Exception('WKPDF unknown method "'.htmlspecialchars($method,ENT_QUOTES).'"');
-                return false;
+            if($this->config->get('Wkhtml2pdf::binpath')[0] == '/')
+            {
+                $this->setBinPath($this->config->get('Wkhtml2pdf::binpath'));
+            }
+            else
+            {
+                $this->setBinPath( realpath(__DIR__) . '/' . $this->config->get('Wkhtml2pdf::binpath'));
+            }
         }
 
-        $this->setMethod($method);
+        if ($this->config->get('Wkhtml2pdf::binfile'))
+        {
+            $this->setBinFile($this->config->get('Wkhtml2pdf::binfile'));
+        }
 
-        // Common to both 'exec' and 'php' method
+        /* Check the binary executable exists */
+        $this->getBin();
+
         if ($this->config->get('Wkhtml2pdf::html'))
         {
             $this->setHtml($options['html']);
@@ -276,27 +249,6 @@ class Wkhtml2pdf
     {
         $r = $this->_exec($this->getBin() . " --extended-help");
         return $r['stdout'];
-    }
-
-    /**
-     * Set method to call wkhtmltopdf
-     *
-     * @return null
-     */
-    public function setMethod($method)
-    {
-        $this->_method = $method;
-        return;
-    }
-
-    /**
-     * Get method to call wkhtmltopdf
-     *
-     * @return string
-     */
-    public function getMethod()
-    {
-        return $this->_method;
     }
 
     /**
@@ -816,16 +768,16 @@ class Wkhtml2pdf
                 unlink($fn);
 
         } else {
-                // delete our temporary files
-                if ($this->_have_html && $this->_tmphtmlfilename) {
-                                                unlink($this->_tmphtmlfilename);
-                }
-                if ($this->_have_headerhtml && $this->_headerfilename) {
-                        unlink($this->_headerfilename);
-                }
-                if ($this->_have_footerhtml && $this->_footerfilename) {
-                        unlink($this->_footerfilename);
-                }
+            // delete our temporary files
+            if ($this->_have_html && $this->_tmphtmlfilename) {
+                                            unlink($this->_tmphtmlfilename);
+            }
+            if ($this->_have_headerhtml && $this->_headerfilename) {
+                    unlink($this->_headerfilename);
+            }
+            if ($this->_have_footerhtml && $this->_footerfilename) {
+                    unlink($this->_footerfilename);
+            }
         }
 
         return;
@@ -840,61 +792,30 @@ class Wkhtml2pdf
     protected function _getCommand($in)
     {
         $command = '';
+        $command = $this->getBin();
 
-        switch ($this->getMethod()) {
-                case 'exec':
-                                $command = $this->getBin();
+        $command .= " --orientation " . escapeshellarg($this->getOrientation());
+        $command .= " --page-size " . escapeshellarg($this->getPageSize());
+        $command .= ($this->getTOC()) ? " --toc" : "";
+        $command .= ($this->getGrayscale()) ? " --grayscale" : "";
+        $command .= ($this->getTitle()) ? ' --title "' . escapeshellarg($this->getTitle()) . '"' : "";
+        $command .= ($this->getCopies() > 1) ? " --copies " . escapeshellarg($this->getCopies()) : "";
+        $command .= (strlen($this->getPassword()) > 0) ? " --password " . escapeshellarg($this->getPassword()) . "" : "";
+        $command .= (strlen($this->getUsername()) > 0) ? " --username " . escapeshellarg($this->getUsername()) . "" : "";
+        $command .= $this->_have_headerhtml ? " --margin-top 20 --header-html " . escapeshellarg($this->_headerfilename) : "";
+        $command .= $this->_have_footerhtml ? " --margin-bottom 20 --footer-html " . escapeshellarg($this->_footerfilename) : "";
+        $command .= ($this->getOptions()) ? " {$this->getOptions()} " : "";
 
-                                $command .= " --orientation " . escapeshellarg($this->getOrientation());
-                                $command .= " --page-size " . escapeshellarg($this->getPageSize());
-                                $command .= ($this->getTOC()) ? " --toc" : "";
-                                $command .= ($this->getGrayscale()) ? " --grayscale" : "";
-                                $command .= ($this->getTitle()) ? ' --title "' . escapeshellarg($this->getTitle()) . '"' : "";
-                                $command .= ($this->getCopies() > 1) ? " --copies " . escapeshellarg($this->getCopies()) : "";
-                                $command .= (strlen($this->getPassword()) > 0) ? " --password " . escapeshellarg($this->getPassword()) . "" : "";
-                                $command .= (strlen($this->getUsername()) > 0) ? " --username " . escapeshellarg($this->getUsername()) . "" : "";
-                                $command .= $this->_have_headerhtml ? " --margin-top 20 --header-html \"" . escapeshellarg($this->_headerfilename) . "\"" : "";
-                                $command .= $this->_have_footerhtml ? " --margin-bottom 20 --footer-html \"" . escapeshellarg($this->_footerfilename) . "\"" : "";
-                                $command .= ($this->getOptions()) ? " {$this->getOptions()} " : "";
+        /*
+         * ignore some errors with some urls as recommended with this wkhtmltopdf error message:
+         *      Error: Failed loading page <url> (sometimes it will work just to ignore this error with --load-error-handling ignore)
+         */
+        if ($this->getHttpUrl()) {
+            // $command .= ' --load-error-handling ignore';
+        }
 
-                                /*
-                                 * ignore some errors with some urls as recommended with this wkhtmltopdf error message:
-                                 *      Error: Failed loading page <url> (sometimes it will work just to ignore this error with --load-error-handling ignore)
-                                 */
-                                if ($this->getHttpUrl()) {
-                                    // $command .= ' --load-error-handling ignore';
-                                }
-
-                                $command .= ' "'.$in.'" ';
-                                $command .= " -";
-
-                                break;
-
-                case 'php':
-                                $command = array();
-
-                                $command['global']["orientation"] = $this->getOrientation();
-                                $command['global']["size.paperSize"] = $this->getPageSize();
-                                ($this->getTOC()) ? $command['global']["toc"] = 1 : "";
-                                ($this->getGrayscale()) ? $command['global']["colorMode"] = "Grayscale" : "";
-                                ($this->getTitle()) ? $command['global']["documentTitle "] = $this->getTitle() : "";
-                                ($this->getCopies() > 1) ? $command['global']["copies "] = $this->getCopies() : "";
-                                (strlen($this->getPassword()) > 0) ? $command['object']["load.password"] = $this->getPassword() : "";
-                                (strlen($this->getUsername()) > 0) ? $command['object']["load.username "] = $this->getUsername() : "";
-                                if ($this->_have_headerhtml) {
-                                        $command['global']["margin.top"] = "20mm";
-                                        $command['object']["header.htmlUrl"] = 'file://'.$this->_headerfilename;
-                                }
-                                if ($this->_have_footerhtml) {
-                                        $command['global']["margin.bottom"] = "20mm";
-                                        $command['object']["footer.htmlUrl"] = 'file://'.$this->_footerfilename;
-                                }
-                                $options = $this->getOptions();
-                                $command['global'] = array_merge($command['global'], $options['global']);
-                                $command['object'] = array_merge($command['object'], $options['object']);
-
-                                break;
-                                }
+        $command .= ' "'.$in.'" ';
+        $command .= " -";
 
         return $command;
     }
@@ -909,69 +830,55 @@ class Wkhtml2pdf
      */
     protected function _render()
     {
-        if ($this->_have_httpurl) {                                                                                                             // source is url
+        if ($this->_have_httpurl)
+        {                                                                                                             // source is url
             $input = $this->getHttpUrl();
-
-        } elseif ($this->_have_htmlfile) {                                                                              // source is predefined disc file
-                        $input = $this->getHtmlPathFile();
-
         }
+        // source is predefined disc file
+        elseif ($this->_have_htmlfile)
+        {
+            $input = $this->getHtmlPathFile();
+        }
+        // source is html string
         elseif ($this->_have_html)
-        {                                                                         // source is html string
+        {
             $input = $this->_tmphtmlfilename = $this->_createFile($this->getHtml());
         }
-        else {
+        else
+        {
             throw new Exception("HTML content or source URL not set");
         }
 
-        if ($this->_have_headerhtml) {
-                $this->_headerfilename = $this->_createFile($this->getHeaderHtml());
+        if ($this->_have_headerhtml)
+        {
+            $this->_headerfilename = $this->_createFile($this->getHeaderHtml());
         }
-        if ($this->_have_footerhtml) {
-                $this->_footerfilename = $this->_createFile($this->getFooterHtml());
+
+        if ($this->_have_footerhtml)
+        {
+            $this->_footerfilename = $this->_createFile($this->getFooterHtml());
         }
 
         $command = $this->_getCommand($input);
 
-        // error_log((is_array($command)?print_r($command,true):$command));     // for debug
-
-        switch ($this->getMethod())
+        $content = $this->_pipeExec($command);
+        
+        if($this->config->get('Wkhtml2pdf::debug'))
         {
-                case 'exec':
-                    // Deprecated - use _pipeExec
-                    //$content = $this->_exec(str_replace('%input%', $input,$command));
-                    $content = $this->_pipeExec($command);
-                    
-                    if($this->config->get('Wkhtml2pdf::debug'))
-                    {
-                        dd(array(
-                            'input' => $input,
-                            'command' => $command,
-                            'content' => $content
-                        ));
-                    }
-
-                    if (strpos(strtolower($content['stderr']), 'error'))
-                        throw new Exception("System error <pre>" . $content['stderr'] . "</pre>");
-
-                    if (strlen($content['stdout']) === 0)
-                        throw new Exception("WKHTMLTOPDF didn't return any data");
-
-                    //if ((int)$content['return'] > 1)
-                        //throw new Exception("Shell error, return code: " . (int)$content['return']);
-
-                    $data = $content['stdout'];
-
-                break;
-
-                case 'php':
-                    $command['global']['out'] = $pdffile = $this->_makeFilename();
-                    $command['object']['page'] = $input;
-                    wkhtmltox_convert('pdf', $command['global'], array($command['object']));
-                    $data = file_get_contents($pdffile);
-                    $this->_deleteFile($pdffile);
-                break;
+            dd(array(
+                'input' => $input,
+                'command' => $command,
+                'content' => $content
+            ));
         }
+
+        if (strpos(strtolower($content['stderr']), 'error'))
+            throw new Exception("System error <pre>" . $content['stderr'] . "</pre>");
+
+        if (strlen($content['stdout']) === 0)
+            throw new Exception("WKHTMLTOPDF didn't return any data");
+
+        $data = $content['stdout'];
 
         return (isset($data)?$data:false);
     }
@@ -1070,11 +977,11 @@ class Wkhtml2pdf
 
         $rtn = proc_close($proc);
         return array(
-                      'stdout' => $stdout,
-                      'stderr' => $stderr,
-                      'return' => $rtn
-                                );
-                }
+            'stdout' => $stdout,
+            'stderr' => $stderr,
+            'return' => $rtn
+            );
+        }
 
                 /**
      * Return PDF with various options.
