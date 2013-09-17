@@ -35,7 +35,7 @@ In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider'` t
 
     ),
 
-At the end of `config/app.php` add `'Wkhtml2pdf'    => 'Nitmedia\Wkhtml2pdf\Facade\Wkhtml2pdf'` to the `$aliases` array
+At the end of `config/app.php` add `'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf'` to the `$aliases` array
 
     'aliases' => array(
 
