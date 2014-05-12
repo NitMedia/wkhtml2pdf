@@ -1,7 +1,7 @@
 <?php namespace Nitmedia\Wkhtml2pdf;
 
 use \Exception;
-use Illuminate\View\Environment;
+use Illuminate\View\Factory;
 use Illuminate\Config\Repository;
 
 /**
@@ -134,7 +134,7 @@ class Wkhtml2pdf
      * @param array $config
      * @return bool FALSE on failure
      */
-    public function __construct(Environment $view, Repository $config)
+    public function __construct(Factory $view, Repository $config)
     {
         $this->view = $view;
         $this->config = $config;
