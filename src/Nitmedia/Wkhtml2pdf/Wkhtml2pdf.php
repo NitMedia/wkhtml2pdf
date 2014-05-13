@@ -1,8 +1,6 @@
 <?php namespace Nitmedia\Wkhtml2pdf;
 
 use \Exception;
-use Illuminate\View\Environment;
-use Illuminate\Config\Repository;
 
 /**
  * This class was produced by PHP-4-Business.co.uk and is based on the classes from
@@ -36,7 +34,7 @@ use Illuminate\Config\Repository;
  */
 
 /**
- * @version 1.01
+ * @version 2
  */
 class Wkhtml2pdf
 {
@@ -80,7 +78,7 @@ class Wkhtml2pdf
     protected $_htmlfilename = null;
     protected $_tmphtmlfilename = null;
 
-        /**
+    /**
      * Directory to use for temporary files
      */
     protected $_tmpfilepath = '/tmp/';
@@ -118,26 +116,28 @@ class Wkhtml2pdf
     /**
      * Illuminate config repository.
      *
-     * @var Illuminate\Config\Repository
+     * @var ConfigInterface
      */
     protected $config;
 
     /**
      * Illuminate view environment.
      *
-     * @var Illuminate\View\Environment
+     * @var ViewInterface
      */
     protected $view;
 
     /**
      * Constructor: initialize command line and reserve temporary file.
-     * @param array $config
-     * @return bool FALSE on failure
+     * @param array|\Nitmedia\Wkhtml2pdf\ConfigInterface $config
+     * @param $view
+     * @throws \Exception
+     * @return \Nitmedia\Wkhtml2pdf\Wkhtml2pdf FALSE on failure
      */
-    public function __construct(Environment $view, Repository $config)
+    public function __construct(ConfigInterface $config, ViewInterface $view)
     {
-        $this->view = $view;
         $this->config = $config;
+        $this->view = $view;
 
         if ($this->config->get('Wkhtml2pdf::binpath'))
         {
@@ -161,7 +161,7 @@ class Wkhtml2pdf
 
         if ($this->config->get('Wkhtml2pdf::html'))
         {
-            $this->setHtml($options['html']);
+            $this->setHtml($this->config->get('html'));
         }
 
         if ($this->config->get('Wkhtml2pdf::orientation'))
@@ -216,7 +216,7 @@ class Wkhtml2pdf
         {
             $this->setTmpPath($this->config->get('Wkhtml2pdf::tmppath'));
         }
-        
+
         if ($this->config->get('Wkhtml2pdf::output_mode'))
         {
             $this->setOutputMode($this->config->get('Wkhtml2pdf::output_mode'));
@@ -228,6 +228,12 @@ class Wkhtml2pdf
         }
     }
 
+    /**
+     * @param string $view
+     * @param array $data
+     * @param string $name
+     * @throws \Exception
+     */
     public function html($view, $data= array(), $name='file')
     {
         $this->setHtml($this->view->make($view,$data));
@@ -284,7 +290,7 @@ class Wkhtml2pdf
     public function setBinFile($name)
     {
         $this->_binname = (string)$name;
-                return;
+        return;
     }
 
     /**
@@ -340,7 +346,7 @@ class Wkhtml2pdf
     {
         return $this->_tmpfilepath;
     }
-    
+
     /**
      * Set type of output mode
      *
@@ -399,7 +405,7 @@ class Wkhtml2pdf
     {
         $this->_htmlfilename = (string)$name;
         $this->_have_htmlfile = true;
-                return;
+        return;
     }
 
     /**
@@ -420,7 +426,7 @@ class Wkhtml2pdf
      */
     public function getHtmlPathFile()
     {
-                $file = $this->getHtmlPath() . $this->getHtmlFile();
+        $file = $this->getHtmlPath() . $this->getHtmlFile();
 
         if (realpath($file) === false)
             throw new Exception('Path must be absolute ("'.htmlspecialchars($file,ENT_QUOTES).'")');
@@ -652,7 +658,7 @@ class Wkhtml2pdf
         return $this->_httppassword;
     }
 
-                /**
+    /**
      *  Set any other WKTMLTOPDF options you need
      *
      * @param string $options
@@ -765,18 +771,18 @@ class Wkhtml2pdf
     protected function _deleteFile($fn='')
     {
         if ($fn !== '') {
-                unlink($fn);
+            unlink($fn);
 
         } else {
             // delete our temporary files
             if ($this->_have_html && $this->_tmphtmlfilename) {
-                                            unlink($this->_tmphtmlfilename);
+                unlink($this->_tmphtmlfilename);
             }
             if ($this->_have_headerhtml && $this->_headerfilename) {
-                    unlink($this->_headerfilename);
+                unlink($this->_headerfilename);
             }
             if ($this->_have_footerhtml && $this->_footerfilename) {
-                    unlink($this->_footerfilename);
+                unlink($this->_footerfilename);
             }
         }
 
@@ -862,7 +868,7 @@ class Wkhtml2pdf
         $command = $this->_getCommand($input);
 
         $content = $this->_pipeExec($command);
-        
+
         if($this->config->get('Wkhtml2pdf::debug'))
         {
             dd(array(
@@ -980,10 +986,10 @@ class Wkhtml2pdf
             'stdout' => $stdout,
             'stderr' => $stderr,
             'return' => $rtn
-            );
-        }
+        );
+    }
 
-                /**
+    /**
      * Return PDF with various options.
      *
      * @param int $mode                 How to output (constants from this same class - c.f. 'PDF get modes')
@@ -1008,7 +1014,7 @@ class Wkhtml2pdf
                     header("Content-Transfer-Encoding: binary");
                     header("Content-Length:" . strlen($result));
                     echo $result;
-                        $this->_deleteFile();
+                    $this->_deleteFile();
                     exit();
                 } else {
                     throw new Exception("Headers already sent");
@@ -1028,7 +1034,7 @@ class Wkhtml2pdf
                     header("Content-Length: " . strlen($result));
                     header('Content-Disposition: inline; filename="' . basename($filename) .'";');
                     echo $result;
-                        $this->_deleteFile();
+                    $this->_deleteFile();
                     exit();
                 } else {
                     throw new Exception("Headers already sent");
@@ -1041,5 +1047,7 @@ class Wkhtml2pdf
             default:
                 throw new Exception("Mode: " . $mode . " is not supported");
         }
+
+        return TRUE;
     }
 }
