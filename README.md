@@ -50,13 +50,19 @@ At the end of `config/app.php` add `'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkh
 Please set the driver file accoridng to the current OS, Supported drivers include: mac osx, linux 32, linux 64
 
     php artisan config:publish nitmedia/wkhtml2pdf
-    
+
+### Driver
+[wkhtml2pdf][1]
+
+Version: [0.12.1-rc][2]
+
+
 ### Driver types
 
-	wkhtmltopdf-0.9.9-OS-X.i368
-	wkhtmltopdf-amd64
-	wkhtmltopdf-i386
-    
+- wkhtmltopdf-0.12.1-OS-X.i386  - `Mac OS X 10.8+ (Carbon), 32-bit`
+- wkhtmltopdf-amd64 - `Linux (Debian Wheezy), 64-bit, for recent distributions (i.e. glibc 2.13 or later)`
+- wkhtmltopdf-i386 -  `Linux (Debian Wheezy), 32-bit, for recent distributions (i.e. glibc 2.13 or later)`
+
 ## Troubleshooting
 	**There is a debug flag in config where you can test the output of the drivers.**
 
@@ -85,3 +91,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+  [1]: http://wkhtmltopdf.org/
+  [2]: https://github.com/wkhtmltopdf/wkhtmltopdf/tree/c22928d
