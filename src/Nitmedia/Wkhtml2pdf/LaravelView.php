@@ -1,7 +1,5 @@
 <?php namespace Nitmedia\Wkhtml2pdf;
 
-use Illuminate\View\Factory;
-
 /**
  * Class LaravelView
  * @package Nitmedia\Wkhtml2pdf
@@ -16,7 +14,7 @@ class LaravelView implements ViewInterface{
     /**
      * @param Environment $view
      */
-    public function __construct(Factory $view){
+    public function __construct($view){
         $this->view = $view;
     }
 
