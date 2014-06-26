@@ -1,6 +1,6 @@
 wkhtml2pdf
 ==========
-Version 1.0 - Laravel 4 - Html to PDF Composer Package
+Version 1.0 - Html to PDF Composer Package
 
 #Usage#
 
@@ -11,6 +11,11 @@ Version 1.0 - Laravel 4 - Html to PDF Composer Package
 	return PDF::html('hello',array('name' => 'Nithin'), 'New File'); // thrid option is for the name of the pdf file thats generated
 
 	PDF::url('http://google.com'); // Pdf from url
+	
+	// What to download to a file instead ?
+	
+	PDF::setOutputMode('F'); // force to file
+	PDF::html('app.invoices.pdf',['title'=>$title],'/var/www/test.pdf'); // custom download path
 
 ## Quick start
 
