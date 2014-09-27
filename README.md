@@ -17,7 +17,7 @@ Version 1.0 - Html to PDF Composer Package
 	PDF::setOutputMode('F'); // force to file
 	PDF::html('app.invoices.pdf',['title'=>$title],'/var/www/test.pdf'); // custom download path
 
-## Quick start
+## Laravel Quick start
 
 ### Required setup
 
