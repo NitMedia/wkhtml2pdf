@@ -1,5 +1,7 @@
 wkhtml2pdf
 ==========
+![Latest Build Status](https://travis-ci.org/NitMedia/wkhtml2pdf.svg?branch=master)
+
 Version 1.0 - Html to PDF Composer Package
 
 #Usage#
