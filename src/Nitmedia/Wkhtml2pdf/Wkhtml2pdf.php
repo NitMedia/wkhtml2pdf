@@ -139,9 +139,11 @@ class Wkhtml2pdf
         $this->config = $config;
         $this->view = $view;
 
-        if ($this->config->get('Wkhtml2pdf::binpath'))
+	$binpath = $this->config->get('Wkhtml2pdf::binpath');
+
+        if ($binpath)
         {
-            if($this->config->get('Wkhtml2pdf::binpath')[0] == '/')
+            if( $binpath[0] === '/')
             {
                 $this->setBinPath($this->config->get('Wkhtml2pdf::binpath'));
             }
