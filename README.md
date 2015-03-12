@@ -75,6 +75,7 @@ Version: [0.12.1-rc][2]
 
 	1. Some users have noted a strange permissions issue executing the drivers. Try chmod'ing the driver files to solve the issue.
 	2. All asset urls must be absolute, relative urls wont work.
+	3. ***Ubuntu users*** you need to do => apt-get install libicu48
 
 
 The MIT License (MIT)
