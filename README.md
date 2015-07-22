@@ -29,7 +29,18 @@ In the `require` key of `composer.json` file add the following
 
 Run the Composer update comand
 
-    $ composer update
+    $ composer update nitmedia/wkhtml2pdf
+    
+#### L5
+
+In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider'` to the end of the `$providers` array
+
+    'providers' => array(
+        ...
+        'Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider',
+    ),
+    
+#### L4
 
 In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider'` to the end of the `$providers` array
 
