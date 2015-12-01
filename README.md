@@ -37,7 +37,7 @@ In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider'`
 
     'providers' => array(
         ...
-        'Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider',
+        Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider::class,
     ),
     
 #### L4
@@ -57,17 +57,17 @@ At the end of `config/app.php` add `'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkh
 
     'aliases' => array(
 
-        'App'        => 'Illuminate\Support\Facades\App',
-        'Artisan'    => 'Illuminate\Support\Facades\Artisan',
+        'App'        => Illuminate\Support\Facades\App::class,
+        'Artisan'    => Illuminate\Support\Facades\Artisan::class,
         ...
-        'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf',
+        'PDF'    => Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf::class,
 
     ),
 
 ## Configuration
 Please set the driver file accoridng to the current OS, Supported drivers include: mac osx, linux 32, linux 64
 
-    php artisan config:publish Nitmedia/Wkhtml2pdf
+    php artisan vendor:publish
 
 ### Driver
 [wkhtml2pdf][1]
