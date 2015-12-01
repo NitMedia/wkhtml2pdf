@@ -16,6 +16,13 @@ class L5Wkhtml2pdfServiceProvider extends ServiceProvider
      *
      * @return void
      */
+     public function boot()
+     {
+         $this->publishes([
+            __DIR__.'/../../config/config.php' => config_path('Wkhtml2pdf.php')
+        ], 'config');
+     }
+     
     public function register()
     {
         $this->app['wkhtml2pdf'] = $this->app->share(function($app)
