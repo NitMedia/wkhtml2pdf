@@ -33,37 +33,13 @@ Run the Composer update comand
     
 #### L5
 
-In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider'` to the end of the `$providers` array
-
-    'providers' => array(
-        ...
-        'Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider',
-    ),
-    
-#### L4
-
 In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider'` to the end of the `$providers` array
 
     'providers' => array(
-
-        'Illuminate\Foundation\Providers\ArtisanServiceProvider',
-        'Illuminate\Auth\AuthServiceProvider',
         ...
         'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider',
-
     ),
-
-At the end of `config/app.php` add `'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf'` to the `$aliases` array
-
-    'aliases' => array(
-
-        'App'        => 'Illuminate\Support\Facades\App',
-        'Artisan'    => 'Illuminate\Support\Facades\Artisan',
-        ...
-        'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf',
-
-    ),
-
+    
 ## Configuration
 Please set the driver file accoridng to the current OS, Supported drivers include: mac osx, linux 32, linux 64
 
