@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class Wkhtml2pdfServiceProvider extends ServiceProvider
+class L5Wkhtml2pdfServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -10,11 +10,6 @@ class Wkhtml2pdfServiceProvider extends ServiceProvider
      * @var bool
      */
     protected $defer = false;
-
-    public function boot()
-    {
-        $this->package('Nitmedia/Wkhtml2pdf');
-    }
 
     /**
      * Register the service provider.
