@@ -43,7 +43,7 @@ In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider'` t
 ## Configuration
 Please set the driver file accoridng to the current OS, Supported drivers include: mac osx, linux 32, linux 64
 
-    php artisan config:publish Nitmedia/Wkhtml2pdf
+    php artisan vendor:publish Nitmedia/Wkhtml2pdf
 
 ### Driver
 [wkhtml2pdf][1]
