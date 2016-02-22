@@ -29,7 +29,18 @@ In the `require` key of `composer.json` file add the following
 
 Run the Composer update comand
 
-    $ composer update
+    $ composer update nitmedia/wkhtml2pdf
+    
+#### L5
+
+In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider'` to the end of the `$providers` array
+
+    'providers' => array(
+        ...
+        Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider::class,
+    ),
+    
+#### L4
 
 In your `config/app.php` add `'Nitmedia\Wkhtml2pdf\Wkhtml2pdfServiceProvider'` to the end of the `$providers` array
 
@@ -46,17 +57,17 @@ At the end of `config/app.php` add `'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkh
 
     'aliases' => array(
 
-        'App'        => 'Illuminate\Support\Facades\App',
-        'Artisan'    => 'Illuminate\Support\Facades\Artisan',
+        'App'        => Illuminate\Support\Facades\App::class,
+        'Artisan'    => Illuminate\Support\Facades\Artisan::class,
         ...
-        'PDF'    => 'Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf',
+        'PDF'    => Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf::class,
 
     ),
 
 ## Configuration
 Please set the driver file accoridng to the current OS, Supported drivers include: mac osx, linux 32, linux 64
 
-    php artisan config:publish nitmedia/wkhtml2pdf
+    php artisan vendor:publish
 
 ### Driver
 [wkhtml2pdf][1]
@@ -75,6 +86,7 @@ Version: [0.12.1-rc][2]
 
 	1. Some users have noted a strange permissions issue executing the drivers. Try chmod'ing the driver files to solve the issue.
 	2. All asset urls must be absolute, relative urls wont work.
+	3. ***Ubuntu users*** you need to do => apt-get install libxrender1 libxext6
 
 
 The MIT License (MIT)
