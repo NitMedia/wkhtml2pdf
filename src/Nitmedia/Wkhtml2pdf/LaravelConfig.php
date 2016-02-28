@@ -21,7 +21,7 @@ class LaravelConfig implements ConfigInterface{
      * @return mixed
      */
     public function get($key){
-        return $this->config->get($key);
+        return $this->config->get('Wkhtml2pdf.' . $key);
     }
 
 }
