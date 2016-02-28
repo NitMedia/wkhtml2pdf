@@ -27,7 +27,7 @@ class L5Wkhtml2pdfServiceProvider extends ServiceProvider
     {
         $this->app['wkhtml2pdf'] = $this->app->share(function($app)
         {
-            return new Wkhtml2pdf(new LaravelConfigL5($app['config']), new LaravelView($app['view']));
+            return new Wkhtml2pdf(new LaravelConfig($app['config']), new LaravelView($app['view']));
         });
     }
 
