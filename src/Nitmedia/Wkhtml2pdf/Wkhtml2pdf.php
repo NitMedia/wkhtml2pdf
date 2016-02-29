@@ -139,94 +139,94 @@ class Wkhtml2pdf
         $this->config = $config;
         $this->view = $view;
 
-	$binpath = $this->config->get('Wkhtml2pdf.binpath');
+	$binpath = $this->config->get('binpath');
 
         if ($binpath)
         {
             if( $binpath[0] === '/')
             {
-                $this->setBinPath($this->config->get('Wkhtml2pdf.binpath'));
+                $this->setBinPath($this->config->get('binpath'));
             }
             else
             {
-                $this->setBinPath( realpath(__DIR__) . '/' . $this->config->get('Wkhtml2pdf.binpath'));
+                $this->setBinPath( realpath(__DIR__) . '/' . $this->config->get('binpath'));
             }
         }
 
-        if ($this->config->get('Wkhtml2pdf.binfile'))
+        if ($this->config->get('binfile'))
         {
-            $this->setBinFile($this->config->get('Wkhtml2pdf.binfile'));
+            $this->setBinFile($this->config->get('binfile'));
         }
 
         /* Check the binary executable exists */
         $this->getBin();
 
-        if ($this->config->get('Wkhtml2pdf.html'))
+        if ($this->config->get('html'))
         {
             $this->setHtml($this->config->get('html'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.orientation'))
+        if ($this->config->get('orientation'))
         {
-            $this->setOrientation($this->config->get('Wkhtml2pdf.orientation'));
+            $this->setOrientation($this->config->get('orientation'));
         }
         else
         {
             $this->setOrientation(self::ORIENTATION_PORTRAIT);
         }
 
-        if ($this->config->get('Wkhtml2pdf.page_size'))
+        if ($this->config->get('page_size'))
         {
-            $this->setPageSize($this->config->get('Wkhtml2pdf.page_size'));
+            $this->setPageSize($this->config->get('page_size'));
         }
         else
         {
             $this->setPageSize(self::SIZE_A4);
         }
 
-        if ($this->config->get('Wkhtml2pdf.toc'))
+        if ($this->config->get('toc'))
         {
-            $this->setTOC($this->config->get('Wkhtml2pdf.toc'));
+            $this->setTOC($this->config->get('toc'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.grayscale'))
+        if ($this->config->get('grayscale'))
         {
-            $this->setGrayscale($this->config->get('Wkhtml2pdf.grayscale'));
+            $this->setGrayscale($this->config->get('grayscale'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.title'))
+        if ($this->config->get('title'))
         {
-            $this->setTitle($this->config->get('Wkhtml2pdf.title'));
+            $this->setTitle($this->config->get('title'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.debug'))
+        if ($this->config->get('debug'))
         {
-            $this->debug = $this->config->get('Wkhtml2pdf.debug');
+            $this->debug = $this->config->get('debug');
         }
 
-        if ($this->config->get('Wkhtml2pdf.header_html'))
+        if ($this->config->get('header_html'))
         {
-            $this->setHeaderHtml($this->config->get('Wkhtml2pdf.header_html'));
+            $this->setHeaderHtml($this->config->get('header_html'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.footer_html'))
+        if ($this->config->get('footer_html'))
         {
-            $this->setFooterHtml($this->config->get('Wkhtml2pdf.footer_html'));
+            $this->setFooterHtml($this->config->get('footer_html'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.tmppath'))
+        if ($this->config->get('tmppath'))
         {
-            $this->setTmpPath($this->config->get('Wkhtml2pdf.tmppath'));
+            $this->setTmpPath($this->config->get('tmppath'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.output_mode'))
+        if ($this->config->get('output_mode'))
         {
-            $this->setOutputMode($this->config->get('Wkhtml2pdf.output_mode'));
+            $this->setOutputMode($this->config->get('output_mode'));
         }
 
-        if ($this->config->get('Wkhtml2pdf.options'))
+        if ($this->config->get('options'))
         {
-            $this->setOptions($this->config->get('Wkhtml2pdf.options'));
+            $this->setOptions($this->config->get('options'));
         }
     }
 
@@ -871,7 +871,7 @@ class Wkhtml2pdf
 
         $content = $this->_pipeExec($command);
 
-        if($this->config->get('Wkhtml2pdf.debug'))
+        if($this->config->get('debug'))
         {
             dd(array(
                 'input' => $input,
