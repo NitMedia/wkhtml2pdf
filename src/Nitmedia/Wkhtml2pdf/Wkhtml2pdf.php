@@ -143,7 +143,8 @@ class Wkhtml2pdf
 
         if ($binpath)
         {
-            if( $binpath[0] === '/')
+            /* Check for Absolute paths in *nix and Windows */
+            if( $binpath[0] === '/' || $binpath[1] === ':')
             {
                 $this->setBinPath($this->config->get('binpath'));
             }
