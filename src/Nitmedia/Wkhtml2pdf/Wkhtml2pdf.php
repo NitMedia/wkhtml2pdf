@@ -874,7 +874,7 @@ class Wkhtml2pdf
 
         if($this->config->get('debug'))
         {
-            dd(array(
+            dump(array(
                 'input' => $input,
                 'command' => $command,
                 'content' => $content
