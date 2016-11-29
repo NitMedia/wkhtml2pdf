@@ -881,8 +881,8 @@ class Wkhtml2pdf
             ));
         }
 
-        if (strpos(strtolower($content['stderr']), 'error'))
-            throw new Exception("System error <pre>" . $content['stderr'] . "</pre>");
+        if(preg_match('/error(?! ignored)/i', $content['stderr']))
+		throw new Exception("System error <pre>" . $content['stderr'] . "</pre>");
 
         if (strlen($content['stdout']) === 0)
             throw new Exception("WKHTMLTOPDF didn't return any data");
