@@ -25,7 +25,7 @@ class L5Wkhtml2pdfServiceProvider extends ServiceProvider
      
     public function register()
     {
-        $this->app['wkhtml2pdf'] = $this->app->share(function($app)
+        $this->app->singleton('wkhtml2pdf', function($app)
         {
             return new Wkhtml2pdf(new LaravelConfig($app['config']), new LaravelView($app['view']));
         });
